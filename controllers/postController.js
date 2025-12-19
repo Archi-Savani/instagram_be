@@ -54,8 +54,24 @@ const getPostsByUser = async (req, res) => {
     }
 };
 
+// Get all posts of all users
+const getAllPosts = async (req, res) => {
+    try {
+        const posts = await Post.find({})
+            .sort({ createdAt: -1 })
+            .populate("user", "name email") // include basic user info
+            .lean();
+
+        res.json({ posts });
+    } catch (error) {
+        console.error("Error fetching all posts:", error);
+        res.status(500).json({ message: "Unable to fetch posts." });
+    }
+};
+
 module.exports = {
     createPost,
     getPostsByUser,
+    getAllPosts,
 };
 
